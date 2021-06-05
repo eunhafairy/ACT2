@@ -3,7 +3,25 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - bomb
+  - specialBomb
+  - invulnerablePlayer
+  - wall
+  - livePanelScreen
+  - gameOverScreen
+  - Enemy
+  - addedEnemy
+  - defaultEnemy
+  - buff
+  - ground
+  - roof
+  - freezeEnemy
+  - freezeAddedEnemy
+  - GameManager
+  - playerTemp
+  - buttons
+  - platform
   layers:
   - Default
   - TransparentFX
@@ -12,14 +30,14 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Obstacles
+  - enemyGhost
+  - buff
+  - playerGhost
+  - Wall
+  - Coins
+  - Background
   - 
   - 
   - 
@@ -40,4 +58,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 721732431
+    locked: 0
+  - name: GlobalLight
+    uniqueID: 2416388533
+    locked: 0
+  - name: Characters
+    uniqueID: 3824887765
     locked: 0
