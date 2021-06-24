@@ -63,7 +63,7 @@ public class collectScript : MonoBehaviour
                 score = PlayerPrefs.GetInt("Score");
                 score += 20;
                 PlayerPrefs.SetInt("Score", score);
-                animator.SetTrigger("score20");
+                animator.SetTrigger("score10");
            
             }
             else {

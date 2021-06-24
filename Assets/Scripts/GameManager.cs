@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Experimental.Rendering.Universal;
 public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI scoreTMP, gameOverScore, timerTMP;
     int score, life;
-    public bool showTutorial;
-    [SerializeField] GameObject livesLeftPanel, enemy, fly_enemy, audioManager;
-    public GameObject buffs, tutorial;
+    public bool showTutorial, isPaused, changeCourt;
+    [SerializeField] GameObject livesLeftPanel, enemy, fly_enemy, audioManager, backgrounds, player;
+    public GameObject buffs, tutorial, pauseScreen;
     float halfScreenSizeX;
     public int timeLeft;
     [SerializeField]Transform lives, lives2;
@@ -18,7 +19,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        int tossCoin = Random.Range(1,10);
+        if (tossCoin > 5)
+        {
+            changeCourt = true;
+        }
+        else {
+            changeCourt = false;
+        }
         showTutorial = true;
         tutorial = GameObject.Find("Tutorial");
         tutorial.SetActive(showTutorial);
@@ -41,23 +49,62 @@ public class GameManager : MonoBehaviour
     }
 
     public void Timer() {
-        timeLeft--;
-        PlayerPrefs.SetInt("Time",timeLeft);
+
+        if (timeLeft  > 0) {
+
+            timeLeft--;
+            PlayerPrefs.SetInt("Time", timeLeft);
+        }
     
     }
 
     // Update is called once per frame
     void Update()
     {
+        //change backgrounds
+      
+            backgrounds.transform.GetChild(0).gameObject.SetActive(changeCourt);
+            backgrounds.transform.GetChild(1).gameObject.SetActive(!changeCourt);
+
+    
+        //for pausing
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                bgMusic.volume = 0.545f;
+               
+                Time.timeScale = 1f;
+                pauseScreen.gameObject.SetActive(false);
+                isPaused = false;
+            }
+            else
+            {
+                bgMusic.volume = 0.3f;
+                Time.timeScale = 0f;
+                pauseScreen.gameObject.SetActive(true);
+                isPaused = true;
+            }
+        }
+
+        //unpause
         if (Input.GetMouseButtonDown(0)) {
+            bgMusic.volume = 0.545f;
             Time.timeScale = 1f;
+            pauseScreen.gameObject.SetActive(false);
+            isPaused = false;
             showTutorial = false;
         }
+
+
         tutorial.SetActive(showTutorial);
         timerTMP.SetText("Time Left: "+ timeLeft);
         score = PlayerPrefs.GetInt("Score");
         life = PlayerPrefs.GetInt("Life");
         scoreTMP.SetText(score.ToString());
+
+
+        //lives
         if (life == 3) {
             lives.GetChild(0).gameObject.SetActive(true);
             lives.GetChild(1).gameObject.SetActive(true);

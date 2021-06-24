@@ -221,9 +221,6 @@ AnimatorStateMachine:
     m_State: {fileID: -5877061806487389722}
     m_Position: {x: 130, y: -80, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -7852390374009587657}
-    m_Position: {x: 320, y: 10, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: -7916516562647903369}
     m_Position: {x: 310, y: 180, z: 0}
   - serializedVersion: 1
@@ -244,7 +241,6 @@ AnimatorStateMachine:
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -3037891842923235633}
-  - {fileID: 6398009758498242269}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
@@ -317,25 +313,25 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: score20
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: isSpecial
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: tunaw
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer

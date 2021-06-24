@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 using UnityEngine.Experimental.Rendering.Universal;
+
 public class enemyGFX : MonoBehaviour
 {
     public AIPath aIPath;
-    
-  
+
     GameObject player;
     AIDestinationSetter setter;
     private void Start()
@@ -28,13 +28,19 @@ public class enemyGFX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
         if (aIPath.desiredVelocity.x >= 0.01f) {
             this.GetComponent<SpriteRenderer>().flipX = false;
         } else if (aIPath.desiredVelocity.x <= -0.01f) {
             this.GetComponent<SpriteRenderer>().flipX = true;
         }
     }
+    private void FixedUpdate()
+    {
+        
+      
+    }
+
+   
     IEnumerator placeTag() {
         this.gameObject.layer = 9;
         

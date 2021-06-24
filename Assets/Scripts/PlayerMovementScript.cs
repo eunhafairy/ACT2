@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Experimental.Rendering.Universal;
+using Pathfinding;
 public class PlayerMovementScript : MonoBehaviour
 {
     [SerializeField] GameObject gameOverScreen, livesLeftScreen, defaultEnemyObject, audioManager, pauseBuff;
@@ -12,7 +13,7 @@ public class PlayerMovementScript : MonoBehaviour
     public Animator animator;
     public float runSpeed = 40f;
     float horizontalMove = 0f;
-    bool jump = false, glide = false, slide = false, canClick = true, isDead = false;
+    bool jump = false, glide = false, slide = false, canClick = true, isDead = false, isPaused = false, pauseFlag;
     int life;
 
     
@@ -21,14 +22,25 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void Start()
     {
+   
+        
         GameManager = GameObject.Find("GameManager");
         bgMusic = audioManager.transform.GetChild(0).gameObject.GetComponent<AudioSource>();
         InvokeRepeating("canClickAgain", 0, 1);
     }
     void Update()
     {
+
+
+      
+
         if (GameManager.GetComponent<GameManager>().timeLeft <= 0) {
+
             isDead = true;
+         
+            characterController.enabled = false;
+            this.gameObject.tag = "playerTemp";
+            runSpeed = 0;
             AudioFade.FadeOut(GetComponent<AudioSource>(), 1);
             animator.SetBool("isDead", true);
             this.gameObject.layer = 11;
@@ -57,11 +69,14 @@ public class PlayerMovementScript : MonoBehaviour
 
 
             }
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                glide = true;
+            if (GetComponent<Rigidbody2D>().velocity.y < 0) {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    glide = true;
 
+                }
             }
+           
             else
             {
                 glide = false;
@@ -92,6 +107,7 @@ public class PlayerMovementScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
+       
         characterController.Move(horizontalMove * Time.fixedDeltaTime, jump, glide, slide);
         jump = false;
         slide = false;
@@ -127,6 +143,9 @@ public class PlayerMovementScript : MonoBehaviour
                 if (life <= 1)
                 {
                     isDead = true;
+                    characterController.enabled = false;
+                    this.gameObject.tag = "playerTemp";
+                    runSpeed = 0;
                     this.gameObject.transform.LookAt(collision.gameObject.transform);
 
                     if (gameObject.GetComponent<SpriteRenderer>().flipX)
@@ -202,16 +221,25 @@ public class PlayerMovementScript : MonoBehaviour
         if (collision.gameObject.tag == "freezeEnemy" || collision.gameObject.tag == "freezeAddedEnemy")
         {
           int score = PlayerPrefs.GetInt("Score")+ 10;
+            audioManager.transform.GetChild(6).gameObject.GetComponent<AudioSource>().Play();
           PlayerPrefs.SetInt("Score", score);
             if (collision.gameObject.tag == "freezeEnemy")
             {
                 collision.gameObject.layer = 9;
                 collision.gameObject.GetComponent<SpriteRenderer>().color = new Color(1,1,1,1f);
                 collision.gameObject.GetComponent<Animator>().SetTrigger("patDeath");
-                collision.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+                collision.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
+
             }
             else {
-                collision.gameObject.SetActive(false);
+                collision.gameObject.layer = 9;
+                collision.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1f);
+                collision.gameObject.GetComponent<Animator>().SetTrigger("death");
+                collision.gameObject.GetComponent<AIDestinationSetter>().enabled = false;
+                collision.gameObject.GetComponent<enemyGFX>().enabled = false;
+                collision.gameObject.GetComponent<AIPath>().enabled = false;
+                collision.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+                collision.gameObject.GetComponent<Rigidbody2D>().gravityScale =1;
             }
             
          // collision.gameObject.SetActive(false);
@@ -240,7 +268,8 @@ public class PlayerMovementScript : MonoBehaviour
         //set timer
         GameManager.GetComponent<GameManager>().timeLeft = PlayerPrefs.GetInt("Time");
         GameManager.GetComponent<GameManager>().InvokeRepeating("Timer",1,1);
-
+        GameManager.GetComponent<GameManager>().changeCourt = !GameManager.GetComponent<GameManager>().changeCourt;
+       
         isDead = false;
         DestroyAddedEnemies("addedEnemy");
         GameObject buff = GameObject.FindGameObjectWithTag("buff");
